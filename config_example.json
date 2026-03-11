@@ -1,0 +1,77 @@
+{
+  "selectModel": "自定义",
+  "selectTemplate": "社会数据",
+  "video": {
+    "audio_name": "",
+    "duration": 10
+  },
+  "llm_models": {
+    "自定义": {
+      "name": "自定义",
+      "base_url": "",
+      "model": "",
+      "api_key": "",
+      "supports_search": true
+    },
+    "deepseek": {
+      "name": "DeepSeek",
+      "base_url": "https://api.deepseek.com/v1",
+      "model": "deepseek-chat",
+      "api_key": "",
+      "supports_search": true
+    },
+    "qwen": {
+      "name": "通义千问",
+      "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "model": "qwen-plus",
+      "api_key": "",
+      "supports_search": true
+    }
+  },
+  "templates": {
+    "自定义": {
+      "name": "自定义",
+      "description": "使用自定义配置",
+      "color_scheme": "经典红",
+      "header": {
+        "title": "时代周刊",
+        "subtitle": "TIMES WEEK",
+        "tag": "本周热评",
+        "height": 250
+      },
+      "icon": null
+    },
+    "社会数据": {
+      "name": "社会数据",
+      "description": "社会数据",
+      "color_scheme": "经典红",
+      "header": {
+        "title": "社会观察",
+        "subtitle": "SOCIAL INSIGHTS",
+        "tag": "数据洞察",
+        "height": 250
+      },
+      "icon": null
+    }
+  },
+  "color_schemes": {
+    "经典红": {
+      "name": "经典红",
+      "primary": "#C41E24",
+      "text": "#1A1A1A",
+      "title": "#1A1A1A",
+      "background": "#FDF8F5",
+      "accent": "#8B0000",
+      "header_bg": "#FFFFFF"
+    },
+    "墨绿": {
+      "name": "墨绿",
+      "primary": "#2D5A4A",
+      "text": "#1A1A1A",
+      "title": "#1A1A1A",
+      "background": "#F5F9F7",
+      "accent": "#1E3D32",
+      "header_bg": "#FFFFFF"
+    }
+  }
+}
