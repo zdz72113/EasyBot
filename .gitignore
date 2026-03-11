@@ -209,5 +209,6 @@ __marimo__/
 config.json
 history/
 audio/
+easybot-release/
 build_release.bat
 发布文档.md
