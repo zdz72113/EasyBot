@@ -316,7 +316,8 @@ class MarkdownRenderer(BaseRenderer):
         line_height = bbox[3] - bbox[1] + self.context.line_spacing["line"]
 
         for text, is_bold in segments:
-            use_font = self.fonts.lead_text if is_bold else self.fonts.body_text
+            # 粗体（**包裹）使用 body_text 字体，只改变颜色为主题色
+            use_font = self.fonts.body_text
             color = primary_color if is_bold else text_color
 
             for char in text:
