@@ -15,7 +15,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config import (
     DEFAULT_WIDTH, DEFAULT_HEIGHT, PADDING,
-    FONT_SIZES, LINE_SPACING, HEADER_CONFIG, FOOTER_CONFIG
+    FONT_SIZES, LINE_SPACING, HEADER_CONFIG, FOOTER_CONFIG,
+    get_effective_font_sizes, get_effective_line_spacing,
 )
 
 
@@ -33,6 +34,7 @@ class RenderContext:
     header_config: Dict[str, Any] = field(default_factory=lambda: HEADER_CONFIG.copy())
     footer_config: Dict[str, Any] = field(default_factory=lambda: FOOTER_CONFIG.copy())
     icon_path: Optional[str] = None
+    line_spacing: Dict[str, int] = field(default_factory=get_effective_line_spacing)
 
     @property
     def colors(self) -> Dict[str, str]:
@@ -126,14 +128,15 @@ def load_font(font_path: str, size: int) -> ImageFont.FreeTypeFont:
 def create_font_set(font_paths: dict = None) -> FontSet:
     if font_paths is None:
         font_paths = get_system_font_path()
+    font_sizes = get_effective_font_sizes()
 
     return FontSet(
-        header_title=load_font(font_paths.get("kai", font_paths["regular"]), FONT_SIZES["header_title"]),
-        header_subtitle=load_font(font_paths["regular"], FONT_SIZES["header_subtitle"]),
-        header_tag=load_font(font_paths.get("kai", font_paths["regular"]), FONT_SIZES["header_tag"]),
-        main_title=load_font(font_paths.get("bold", font_paths["regular"]), FONT_SIZES["main_title"]),
-        lead_text=load_font(font_paths.get("bold", font_paths["regular"]), FONT_SIZES["lead_text"]),
-        body_text=load_font(font_paths["regular"], FONT_SIZES["body_text"]),
+        header_title=load_font(font_paths.get("kai", font_paths["regular"]), font_sizes["header_title"]),
+        header_subtitle=load_font(font_paths["regular"], font_sizes["header_subtitle"]),
+        header_tag=load_font(font_paths.get("kai", font_paths["regular"]), font_sizes["header_tag"]),
+        main_title=load_font(font_paths.get("bold", font_paths["regular"]), font_sizes["main_title"]),
+        lead_text=load_font(font_paths.get("bold", font_paths["regular"]), font_sizes["lead_text"]),
+        body_text=load_font(font_paths["regular"], font_sizes["body_text"]),
         footer_banner=load_font(font_paths.get("kai", font_paths["regular"]), FOOTER_CONFIG["font_size"]),
         small_text=load_font(font_paths["regular"], 28),
     )

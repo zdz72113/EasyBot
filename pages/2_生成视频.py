@@ -18,7 +18,12 @@ from video_generator import get_available_audio_files, generate_video_bytes
 from history_manager import load_records, update_record
 from renderers import RenderContext
 from renderers.markdown_renderer import MarkdownRenderer
-from config import get_color_schemes, get_preset_templates, load_poster, save_poster, load_video, save_video
+from config import (
+    get_color_schemes, get_preset_templates, load_poster, save_poster,
+    get_poster_typography, save_poster_typography,
+    save_color_scheme_colors,
+    load_video, save_video,
+)
 
 st.set_page_config(
     page_title="生成视频",
@@ -91,6 +96,12 @@ def init_session_state():
             st.session_state.poster_header_subtitle = saved_poster["header_subtitle"]
         if "poster_header_tag" not in st.session_state and saved_poster.get("header_tag") is not None:
             st.session_state.poster_header_tag = saved_poster["header_tag"]
+        if "poster_body_text" not in st.session_state and saved_poster.get("body_text") is not None:
+            st.session_state.poster_body_text = saved_poster["body_text"]
+        if "poster_paragraph" not in st.session_state and saved_poster.get("paragraph") is not None:
+            st.session_state.poster_paragraph = saved_poster["paragraph"]
+        if "poster_line" not in st.session_state and saved_poster.get("line") is not None:
+            st.session_state.poster_line = saved_poster["line"]
     template_names = list(get_preset_templates().keys())
     # 仅首次进入页面时用 JSON 初始化下拉框选中项，之后以用户选择为准
     if "poster_template_select" not in st.session_state:
@@ -161,15 +172,14 @@ def render_poster_config():
             key="poster_color_scheme",
         )
         colors = (COLOR_SCHEMES.get(color_scheme) or list(COLOR_SCHEMES.values())[0]) if COLOR_SCHEMES else {"primary": "#C41E24", "background": "#FDF8F5"}
-        swatch_html = (
-            f'<span style="background:{colors["primary"]};display:inline-block;'
-            f'width:28px;height:28px;border-radius:4px;margin-right:6px;vertical-align:middle;"></span>'
-            f'<span style="background:{colors["background"]};display:inline-block;'
-            f'width:28px;height:28px;border-radius:4px;border:1px solid #ccc;'
-            f'margin-right:6px;vertical-align:middle;"></span>'
-            f'<small>{colors["primary"]} / {colors["background"]}</small>'
-        )
-        st.markdown(swatch_html, unsafe_allow_html=True)
+        # 颜色选择器：直接修改当前配色方案在 color_schemes 中的 primary/background
+        pc1, pc2 = st.columns(2)
+        with pc1:
+            new_primary = st.color_picker("主题色", value=colors.get("primary", "#C41E24"), key="poster_primary_picker")
+        with pc2:
+            new_background = st.color_picker("背景色", value=colors.get("background", "#FDF8F5"), key="poster_background_picker")
+        if new_primary != colors.get("primary") or new_background != colors.get("background"):
+            save_color_scheme_colors(color_scheme, new_primary, new_background)
 
         st.markdown("**头部文字**")
         hcol1, hcol2, hcol3 = st.columns(3)
@@ -192,6 +202,37 @@ def render_poster_config():
                 key="poster_header_tag",
             )
 
+        typo = get_poster_typography()
+        st.markdown("**正文与间距**（可根据内容多少调整）")
+        tcol1, tcol2, tcol3 = st.columns(3)
+        with tcol1:
+            st.number_input(
+                "正文字号",
+                min_value=20,
+                max_value=56,
+                value=st.session_state.get("poster_body_text", typo["body_text"]),
+                key="poster_body_text",
+                help="正文主体字体大小",
+            )
+        with tcol2:
+            st.number_input(
+                "段落间距",
+                min_value=20,
+                max_value=120,
+                value=st.session_state.get("poster_paragraph", typo["paragraph"]),
+                key="poster_paragraph",
+                help="段落之间的垂直间距",
+            )
+        with tcol3:
+            st.number_input(
+                "行间距",
+                min_value=0,
+                max_value=50,
+                value=st.session_state.get("poster_line", typo["line"]),
+                key="poster_line",
+                help="同一段落内行与行的间距",
+            )
+
     # 持久化到 JSON
     save_poster(
         template=st.session_state.get("poster_template", template_names[0]),
@@ -200,6 +241,12 @@ def render_poster_config():
         header_title=st.session_state.get("poster_header_title", HEADER_CONFIG["title"]),
         header_subtitle=st.session_state.get("poster_header_subtitle", HEADER_CONFIG["subtitle"]),
         header_tag=st.session_state.get("poster_header_tag", HEADER_CONFIG["tag"]),
+    )
+    typo = get_poster_typography()
+    save_poster_typography(
+        body_text=st.session_state.get("poster_body_text", typo["body_text"]),
+        paragraph=st.session_state.get("poster_paragraph", typo["paragraph"]),
+        line=st.session_state.get("poster_line", typo["line"]),
     )
 
     cur_template = st.session_state.get("poster_template", template_names[0] if template_names else "自定义")
@@ -359,7 +406,9 @@ def _render_preview_editor(result: dict, selected_id: str):
             new_a = st.text_area(f"A{i+1}", value=qa.get("a", ""), height=80, key=f"p2_edit_a{i}")
         new_qa_list.append({"q": new_q, "a": new_a})
     new_summary = st.text_area("简介", value=result.get("summary", ""), height=60, key="p2_edit_summary")
-    new_tags_str = st.text_input("标签（用空格分隔）", value=" ".join(result.get("tags", [])), key="p2_edit_tags")
+    # 展示时统一为单 #，避免 ##
+    tags_display = [(t if (t and str(t).strip().startswith("#")) else f"#{t}") for t in result.get("tags", [])]
+    new_tags_str = st.text_input("标签（用空格分隔）", value=" ".join(tags_display), key="p2_edit_tags")
     col_save, col_cancel = st.columns([3, 1])
     with col_save:
         if st.button("💾 保存", type="primary", use_container_width=True, key="p2_edit_save"):
@@ -405,7 +454,8 @@ def render_preview_column(result: dict):
         st.markdown(f"**Q{i}** {qa.get('q', '')}")
         st.markdown(qa.get("a", "")[:80] + ("…" if len(qa.get("a", "")) > 80 else ""))
     if result.get("tags"):
-        st.caption(" ".join(f"#{t}" for t in result["tags"]))
+        # 标签已含 # 时不再重复添加，保证只显示一个 #
+        st.caption(" ".join((t if (t and str(t).strip().startswith("#")) else f"#{t}") for t in result["tags"]))
     if st.button("✏️ 编辑", use_container_width=True, key="p2_btn_edit_content"):
         st.session_state.p2_editing_content_id = selected_id
         st.rerun()

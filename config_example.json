@@ -1,8 +1,13 @@
 {
-  "selectModel": "自定义",
+  "selectModel": "DeepSeek",
   "selectTemplate": "社会数据",
+  "poster_typography": {
+    "body_text": 36,
+    "paragraph": 50,
+    "line": 15
+  },
   "video": {
-    "audio_name": "",
+    "audio_name": "和平",
     "duration": 10
   },
   "llm_models": {
@@ -48,10 +53,82 @@
       "header": {
         "title": "社会观察",
         "subtitle": "SOCIAL INSIGHTS",
-        "tag": "数据洞察",
+        "tag": "实时新闻",
         "height": 250
       },
       "icon": null
+    },
+    "国家纵览": {
+      "name": "国家纵览",
+      "description": "国际观察",
+      "color_scheme": "经典红",
+      "header": {
+        "title": "国际观察",
+        "subtitle": "GLOBAL INSIGHTS",
+        "tag": "国家纵览",
+        "height": 250
+      },
+      "icon": null
+    },
+    "知识科普": {
+      "name": "知识科普",
+      "description": "知识科普",
+      "color_scheme": "经典红",
+      "header": {
+        "title": "社会观察",
+        "subtitle": "SOCIAL INSIGHTS",
+        "tag": "知识科普",
+        "height": 250
+      },
+      "icon": null
+    },
+    "人民日报": {
+      "name": "人民日报",
+      "description": "人民日报风格 - 庄重大气的红色主题",
+      "color_scheme": "经典红",
+      "header": {
+        "title": "人民日报",
+        "subtitle": "PEOPLE'S DAILY",
+        "tag": "热点聚焦",
+        "height": 250
+      },
+      "icon": "D:\\Projects\\Product\\Q5Bot\\icons\\people_daily.png"
+    },
+    "哈佛大学": {
+      "name": "哈佛大学",
+      "description": "Harvard 风格 - 深红学术主题",
+      "color_scheme": "经典红",
+      "header": {
+        "title": "哈佛大学",
+        "subtitle": "HARVARD UNIVERSITY",
+        "tag": "学术前沿",
+        "height": 250
+      },
+      "icon": "D:\\Projects\\Product\\Q5Bot\\icons\\harvard.jpeg"
+    },
+    "金融时报": {
+      "name": "金融时报",
+      "description": "Financial Times 风格 - 粉色商业主题",
+      "color_scheme": "琥珀金",
+      "header": {
+        "title": "金融时报",
+        "subtitle": "FINANCIAL TIMES",
+        "tag": "财经观察",
+        "height": 250
+      },
+      "icon": "D:\\Projects\\Product\\Q5Bot\\icons\\ft.png"
+    },
+    "路透社": {
+      "name": "路透社",
+      "description": "Reuters 风格 - 专业新闻橙色主题",
+      "color_scheme": "经典红",
+      "header": {
+        "title": "路透社",
+        "subtitle": "REUTERS",
+        "tag": "全球资讯",
+        "height": 250
+      },
+      "icon": "D:\\Projects\\Product\\Q5Bot\\icons\\reuters.jpg"
     }
   },
   "color_schemes": {
@@ -71,6 +148,33 @@
       "title": "#1A1A1A",
       "background": "#F5F9F7",
       "accent": "#1E3D32",
+      "header_bg": "#FFFFFF"
+    },
+    "藏蓝": {
+      "name": "藏蓝",
+      "primary": "#1E3A5F",
+      "text": "#2C2C2C",
+      "title": "#1A1A1A",
+      "background": "#F5F8FA",
+      "accent": "#0D2137",
+      "header_bg": "#FFFFFF"
+    },
+    "琥珀金": {
+      "name": "琥珀金",
+      "primary": "#B8860B",
+      "text": "#3D3D3D",
+      "title": "#2A2A2A",
+      "background": "#FFFEF5",
+      "accent": "#8B6508",
+      "header_bg": "#FFFFFF"
+    },
+    "典雅紫": {
+      "name": "典雅紫",
+      "primary": "#6B4C9A",
+      "text": "#2D2D2D",
+      "title": "#1A1A1A",
+      "background": "#F9F7FC",
+      "accent": "#4A3570",
       "header_bg": "#FFFFFF"
     }
   }

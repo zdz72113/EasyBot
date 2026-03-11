@@ -369,6 +369,19 @@ def get_color_schemes() -> dict:
     return _config_load().get("color_schemes", {})
 
 
+def save_color_scheme_colors(scheme_name: str, primary: str, background: str) -> None:
+    """将主题色/背景色直接写入 config.json 的 color_schemes 对应方案。"""
+    data = _config_load()
+    schemes = data.setdefault("color_schemes", {})
+    if scheme_name not in schemes:
+        schemes[scheme_name] = {}
+    schemes[scheme_name]["primary"] = primary or schemes[scheme_name].get("primary", "#C41E24")
+    schemes[scheme_name]["background"] = background or schemes[scheme_name].get("background", "#FDF8F5")
+    if "name" not in schemes[scheme_name]:
+        schemes[scheme_name]["name"] = scheme_name
+    _config_save(data)
+
+
 def get_preset_templates() -> dict:
     return _config_load().get("templates", {})
 
@@ -405,12 +418,52 @@ def save_model(preset: str, api_url: str, model_name: str, api_keys: dict) -> No
     _config_save(data)
 
 
+def get_poster_typography() -> dict:
+    """从 config.json 读取海报正文字体与段落/行间距，缺省使用 FONT_SIZES/LINE_SPACING 默认值。"""
+    d = _config_load()
+    typo = d.get("poster_typography", {})
+    return {
+        "body_text": typo.get("body_text", FONT_SIZES["body_text"]),
+        "paragraph": typo.get("paragraph", LINE_SPACING["paragraph"]),
+        "line": typo.get("line", LINE_SPACING["line"]),
+    }
+
+
+def save_poster_typography(body_text: int, paragraph: int, line: int) -> None:
+    """将海报正文字体与段落/行间距写入 config.json。"""
+    data = _config_load()
+    data["poster_typography"] = {
+        "body_text": body_text,
+        "paragraph": paragraph,
+        "line": line,
+    }
+    _config_save(data)
+
+
+def get_effective_font_sizes() -> dict:
+    """合并默认 FONT_SIZES 与 config 中的 body_text，供渲染器使用。"""
+    sizes = FONT_SIZES.copy()
+    typo = get_poster_typography()
+    sizes["body_text"] = typo["body_text"]
+    return sizes
+
+
+def get_effective_line_spacing() -> dict:
+    """合并默认 LINE_SPACING 与 config 中的 paragraph/line，供渲染器使用。"""
+    spacing = LINE_SPACING.copy()
+    typo = get_poster_typography()
+    spacing["paragraph"] = typo["paragraph"]
+    spacing["line"] = typo["line"]
+    return spacing
+
+
 def load_poster() -> Optional[dict]:
     d = _config_load()
     t = d.get("selectTemplate", "")
     templates = d.get("templates", {})
     sel = templates.get(t, {})
     h = sel.get("header", {})
+    typo = get_poster_typography()
     return {
         "template": t or (list(templates.keys())[0] if templates else ""),
         "template_select": t or (list(templates.keys())[0] if templates else ""),
@@ -418,6 +471,9 @@ def load_poster() -> Optional[dict]:
         "header_title": h.get("title", ""),
         "header_subtitle": h.get("subtitle", ""),
         "header_tag": h.get("tag", ""),
+        "body_text": typo["body_text"],
+        "paragraph": typo["paragraph"],
+        "line": typo["line"],
     }
 
 

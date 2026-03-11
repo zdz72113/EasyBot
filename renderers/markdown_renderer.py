@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Any, Tuple
 from PIL import Image, ImageDraw
 
-from .base import BaseRenderer, RenderContext, wrap_text, PADDING, LINE_SPACING
+from .base import BaseRenderer, RenderContext, wrap_text, PADDING
 
 
 @dataclass
@@ -211,7 +211,7 @@ class MarkdownRenderer(BaseRenderer):
         y = self.draw_main_title(draw, data.title, y)
 
         for para in data.paragraphs:
-            y += LINE_SPACING["paragraph"] // 2
+            y += self.context.line_spacing["paragraph"] // 2
             y = self._draw_paragraph(draw, para, y)
 
         if data.footnote:
@@ -235,7 +235,7 @@ class MarkdownRenderer(BaseRenderer):
 
             for line in lead_lines:
                 draw.text((x, y), line, font=self.fonts.lead_text, fill=primary_color)
-                y += line_height + LINE_SPACING["line"]
+                y += line_height + self.context.line_spacing["line"]
 
         if para.body:
             segments = self._parse_rich_text(para.body)
@@ -313,7 +313,7 @@ class MarkdownRenderer(BaseRenderer):
         start_x = x
 
         bbox = self.fonts.body_text.getbbox("测")
-        line_height = bbox[3] - bbox[1] + LINE_SPACING["line"]
+        line_height = bbox[3] - bbox[1] + self.context.line_spacing["line"]
 
         for text, is_bold in segments:
             use_font = self.fonts.lead_text if is_bold else self.fonts.body_text

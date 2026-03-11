@@ -42,15 +42,6 @@ streamlit run EasyBot.py
 
 ---
 
-## Windows 绿色版发布
-
-发布包为**绿色版**：制作时在包内预装嵌入版 Python 与依赖，用户解压后**直接双击「运行EasyBot.bat」**即可运行，无需安装 Python。
-
-1. 运行 `build_release.bat` 生成 `EasyBot-Release`。
-2. 按 **[发布文档.md](发布文档.md)** 将嵌入版 Python 放入 `python` 并执行 `pip install -r requirements.txt`，再打包分发。
-
----
-
 ## 技术栈
 
 - **Streamlit** 多页应用

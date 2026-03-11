@@ -126,7 +126,7 @@ def parse_q5_result(raw_text: str) -> dict:
 
     tags_match = re.search(r'【标签】\s*(.+?)(?=【|$)', raw_text, re.DOTALL)
     if tags_match:
-        tags_text = tags_match.group(1).strip()
+        tags_text = tags_match.group(1).strip().replace("##", "#")  # 将 ## 规范为 #
         result["tags"] = [t.strip() for t in re.findall(r'#\S+', tags_text)]
 
     return result
@@ -148,7 +148,6 @@ def result_to_markdown(result: dict) -> str:
             lines.append(qa["a"])
             lines.append("")
 
-    if result.get("summary"):
-        lines.append(f"> {result['summary']}")
+    # 简介不输出到海报，仅用于视频等场景
 
     return "\n".join(lines)
