@@ -37,7 +37,7 @@ st.markdown("""
 # 标题与简介
 st.markdown(
     '<div class="hero-title">🧠 EasyBot</div>'
-    '<div class="hero-desc">AI 驱动的知识科普内容和视频生成工具，核心是「通过问题快速看懂XX」</div>',
+    '<div class="hero-desc">AI 驱动的知识科普内容和视频生成工具，核心是「通过问题快速看懂一个主题」</div>',
     unsafe_allow_html=True,
 )
 
