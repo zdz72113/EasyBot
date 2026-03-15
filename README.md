@@ -1,6 +1,6 @@
 # EasyBot
 
-一个个人知识创造工作台，通过一键流程把感兴趣的热点话题快速变成「内容 + 海报 + 视频」
+个人知识学习和创现工作台，通过一键流程把感兴趣的热点话题快速变成「内容 + 海报 + 视频」
 
 ![EasyBot](https://github.com/zdz72113/EasyBot/blob/main/img/1.png)
 
