@@ -1,75 +1,133 @@
-# EasyBot
+# EasyBot v2.0 - 知识创作工作台
 
-个人知识学习和创现工作台，通过一键流程把感兴趣的热点话题快速变成「内容 + 海报 + 视频」
+> Learn. Create. Monetize.
 
-![EasyBot](https://github.com/zdz72113/EasyBot/blob/main/img/1.png)
+AI 驱动的知识学习与内容创作平台，支持素材抓取、内容生成、海报制作、视频合成等功能。
 
----
+## ✨ 新特性 (v2.0)
 
-## 功能
+- **Vue3 前端**: 现代化界面，更好的用户体验
+- **增强素材抓取**: 支持 Jina AI Reader、Firecrawl 等多种抓取方式
+- **素材管理**: 统一管理抓取到的图片、链接、文本
+- **精简海报模板**: 核心模板 + 可视化配置
+- **视频字幕**: 支持配音上传 + 自动生成字幕
+- **FastAPI 后端**: 高性能异步 API
 
-1. **内容生成**：输入主题或链接，自动搜索并生成结构化科普文档。
-2. **海报制作**：内置多套模板，一键将内容排版为知识海报。
-3. **视频合成**：选择背景音乐和时长，自动将海报合成为短视频。
+## 🚀 快速开始
 
----
-
-## 案例
-
-![案例](https://github.com/zdz72113/EasyBot/blob/main/img/example.jpg)
-
----
-
-## 安装使用
-
-1. 从 [Releases](https://github.com/zdz72113/EasyBot/releases) 中下载对应版本的.zip文件。
-2. 解压到任意目录（建议路径不含中文或空格）。
-3. 双击 **运行EasyBot.bat**，然后打开浏览器输入 http://localhost:8502 页面即可访问。
-
----
-
-## 使用说明
-
-- **模型**：在「生成内容」页展开「模型配置」，选择预设或自定义，填写 API 地址、模型名、API Key。
-- **海报**：在「生成视频」页选择模板，可改头部标题/副标题/标签、配色。
-- **视频**：从网上下载背景音乐并放入`audio/` 目录，然后可以选择背景音乐和时长。
-
----
-
-## 从代码启动
-
-### 环境
-
-- Python 3.10+
-- 依赖见 `requirements.txt`
+### 方式1: 一键启动 (推荐)
 
 ```bash
-pip install -r requirements.txt
+# 确保已安装 Python 3.10+ 和 Node.js 18+
+python start.py
 ```
 
-### 启动
+### 方式2: 分别启动
 
+**后端:**
 ```bash
-streamlit run EasyBot.py
+pip install -r app/requirements.txt
+python -m uvicorn app.main:app --reload --port 8000
 ```
 
+**前端:**
+```bash
+cd app/web
+npm install
+npm run dev
+```
+
+访问 http://localhost:5173
+
+## 📁 项目结构
+
+```
+EasyBot_New/
+├── app/                  # 应用主目录
+│   ├── api/              # API 路由
+│   │   ├── content.py    # 内容生成接口
+│   │   ├── fetcher.py    # 素材抓取接口
+│   │   ├── config.py     # 配置接口
+│   │   ├── poster.py     # 海报制作接口
+│   │   └── video.py      # 视频合成接口
+│   ├── core/             # 核心配置
+│   │   └── config.py     # 应用配置
+│   ├── models/           # 数据模型
+│   │   └── schemas.py    # Pydantic 模型
+│   ├── services/         # 业务逻辑
+│   │   ├── ai_service.py       # AI 内容生成
+│   │   ├── fetcher_service.py  # 素材抓取
+│   │   ├── poster_service.py   # 海报渲染
+│   │   ├── video_service.py    # 视频合成
+│   │   └── history_service.py  # 历史记录
+│   ├── web/              # Vue3 前端
+│   │   ├── src/
+│   │   │   ├── views/    # 页面组件
+│   │   │   ├── components/  # 公共组件
+│   │   │   ├── api/      # API 调用
+│   │   │   ├── stores/   # Pinia 状态
+│   │   │   └── router/   # 路由配置
+│   │   └── package.json
+│   ├── main.py           # FastAPI 入口
+│   └── requirements.txt  # Python 依赖
+├── audio/                # 音频资源文件
+├── start.py              # 一键启动脚本
+└── README.md             # 项目说明
+```
+
+## 🔧 配置说明
+
+### 1. AI 模型配置
+
+在系统设置中配置：
+
+- **DeepSeek**: 推荐，支持联网搜索
+  - Base URL: `https://api.deepseek.com/v1`
+  - Model: `deepseek-chat`
+
+- **通义千问**: 阿里云服务
+  - Base URL: `https://dashscope.aliyuncs.com/compatible-mode/v1`
+  - Model: `qwen-plus`
+
+### 2. 素材抓取配置 (可选)
+
+- **Jina AI Reader**: 免费，无需配置
+- **Firecrawl**: 需要 API Key，支持结构化数据
+  - 获取地址: https://firecrawl.dev
+
+## 🛠️ 技术栈
+
+| 层级 | 技术 |
+|------|------|
+| 前端 | Vue 3 + TypeScript + Element Plus |
+| 后端 | FastAPI + Python 3.10+ |
+| AI | OpenAI 兼容接口 |
+| 视频 | MoviePy + FFmpeg |
+| 语音 | OpenAI Whisper |
+
+## 📌 功能模块
+
+| 模块 | 功能 |
+|------|------|
+| 内容生成 | 输入主题，AI 自动生成「5个问题看懂」格式内容 |
+| 素材管理 | 抓取网页内容，收集图片、链接等素材 |
+| 海报制作 | 选择模板，一键生成精美知识海报 |
+| 视频创作 | 合成海报与音频，支持字幕生成 |
+
+## 📝 注意事项
+
+1. **API Key**: 请妥善保管，仅存储在本地 `data/config.json`
+2. **字体**: 海报渲染需要中文字体，系统会自动查找常见字体
+3. **音频**: 视频创作需要背景音乐，请将 MP3 文件放入 `audio/` 目录
+
+## 🤝 更新计划
+
+- [x] Vue3 前端重构
+- [x] 增强素材抓取
+- [ ] 多场景视频编辑
+- [ ] 高级字幕样式
+- [ ] 素材库云端同步
+
 ---
 
-
-## 技术栈
-
-- **Streamlit** 多页应用
-- **OpenAI 兼容 API**（DeepSeek、通义千问等）流式生成
-- **Pillow** 海报绘图
-- **MoviePy** 视频合成
-- **BeautifulSoup / requests** 网页抓取
-
----
-
-## 许可与署名
-
-EasyBot · Powered by RoyZheng2017@gmail.com
-
-## 联系作者
-
-![联系](https://github.com/zdz72113/EasyBot/blob/main/img/contact.jpg)
+Powered by EasyBot Team
